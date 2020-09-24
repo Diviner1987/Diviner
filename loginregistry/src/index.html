@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>首页</title>
+</head>
+
+<body>
+    <!-- 大的结构先建出来，看我们想要的效果是一种什么样的效果 -->
+    <div style='display: none;' class='welcom'>
+        <span style='color: red;'></span>欢迎光临
+        <a href="javascript:;">退出</a>
+    </div>
+    <div class='login'>
+        <!-- 点击登录进入注册页面 -->
+        <a href="registry.html">请注册</a>
+        <!-- 点击注册进入登录页面 -->
+        <a href="login.html">请登录</a>
+    </div>
+</body>
+<!-- 需要往cookie里面存储东西，需要调用cookie的封装函数，需要获取元素也要调用 -->
+<script src='../../public2007plus.js'></script>
+<script>
+    const welcom = $('.welcom'); //封装函数来调用，获取元素
+    const login = $('.login');
+    const span = $('span');
+    const close = $('.welcom a');
+    if (cookie.get('username')) { //判断信息在cookie里面在不在
+        welcom.style.display = 'block'; //出现欢迎光临的词
+        login.style.display = 'none'; //隐藏掉登录注册
+        span.innerHTML = cookie.get('username');
+        // 在的话就把cookie里面的内容给span里面的
+    }
+    close.onclick = function() { //当再次点击退出的时候就将信息从cookie里面删除，点击事件需要获取元素
+        cookie.remove('username')
+        welcom.style.display = 'none'; //并且将登录注册显示出来
+        login.style.display = 'block'; //隐藏欢迎光临
+    }
+</script>
+
+</html>

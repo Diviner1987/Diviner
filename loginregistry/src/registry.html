@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>注册页面</title>
+</head>
+
+<body>
+    <fieldset style="width:500px;height: 200px; margin:0 auto;">
+        <legend>用户注册</legend>
+        <form action="http://localhost/loginregistry/php/registry.php" id="registry" method="POST">
+            <p>用户姓名：<input type="text" name="username" class="username"><span></span></p>
+            <p>用户密码：<input type="password" name="password"></p>
+            <p>电子邮箱：<input type="text" name="email"></p>
+            <p><input type="submit" value="注册" name="submit"></p>
+        </form>
+    </fieldset>
+</body>
+<script src='../../public2007plus.js'></script>
+<script>
+    const username = $('.username');
+    const span = $('span');
+    const form = $('#registry');
+    let userflag = true; //设标记是为了在最后submit通过的时候标记为false的就是不符合条件的，就不容许submit事件发生，就不会注册完成跳到登录页面
+    username.onblur = function() {
+        ajax({ //与后端进行交互来来传输数据
+                type: 'post',
+                url: 'http://localhost/loginregistry/php/registry.php',
+                data: {
+                    name: username.value //把输入的用户名给后端
+                }
+            })
+            .then((data) => { //接收从后端的结果
+                if (!data) { //没有的话就是说明我可以继续注册了
+                    span.innerHTML = '√';
+                    span.style.color = 'green';
+                    userflag = true;
+                } else {
+                    span.innerHTML = '该用户名已存在'; //用户名存在的话就说明我要换一个来注册了
+                    span.style.color = 'red';
+                    userflag = false;
+                }
+            });
+    };
+    form.onsubmit = function() {
+        if (!userflag) { //判断标记为false的就是来阻止submit事件发生的
+            return false;
+        }
+    };
+</script>
+
+</html>

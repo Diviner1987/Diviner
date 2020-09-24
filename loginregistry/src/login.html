@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登录页面</title>
+</head>
+
+<body>
+    <!-- 表单的大体结构 -->
+    <fieldset style="width:500px;height: 150px; margin:0 auto;">
+        <legend>用户登录</legend>
+        <form action="" id="registry">
+            <p>用户姓名：<input type="text" class="username"></p>
+            <p>用户密码：<input type="password" class="password"></p>
+            <p><input type="button" value="登录" class="submit"> &nbsp;&nbsp;<a href="registry.html">注册</a></p>
+        </form>
+    </fieldset>
+</body>
+<!-- 封装Ajax函数需要调用的 -->
+<script src='../../public2007plus.js'></script>
+<!-- 加密的函数调用 -->
+<script src='../../sha1.js'></script>
+<script>
+    const aInput = $('input', true); //获取元素,是否获取多个元素
+    aInput[2].onclick = function() { //登录按钮进行事件处理函数，在事件处理的时候，利用Ajax将数据和后端来进行交互，给后端发数据，后端给回数据
+        ajax({
+                type: 'post',
+                url: 'http://localhost/loginregistry/php/login.php',
+                data: { //给后端发的数据
+                    user: aInput[0].value,
+                    pass: hex_sha1(aInput[1].value)
+                }
+            })
+            .then((data) => { //从后端回结果，数据不在就说明数据库里面没有，如果数据已经存在了，就跳入首页显示欢迎光临
+                if (!data) {
+                    alert('用户名或者密码错误') //用户信息不在数据库里面，返回的就是用户名或者密码是错误的
+                    aInput[0].value = ''; //错误的时候，把里面的值也给删除。然后重新输入，input框里面的值
+                    aInput[1].value = '';
+                } else {
+                    location.href = 'index.html'; //用户信息在数据库里面的时候，直接跳转到首页，
+                    cookie.set('username', aInput[0].value, 7) //将信息存储在cookie里面，设置存储的天数
+                }
+            })
+    };
+</script>
+
+</html>
